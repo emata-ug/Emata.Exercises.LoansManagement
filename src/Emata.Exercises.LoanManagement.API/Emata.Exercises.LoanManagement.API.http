@@ -1,0 +1,6 @@
+@Emata.Exercises.LoanManagement.API_HostAddress = http://localhost:5221
+
+GET {{Emata.Exercises.LoanManagement.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
