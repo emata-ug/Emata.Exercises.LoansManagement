@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../buildMultiTargeting/Emata.Exercises.LoanManagement.API.props" />
-</Project>
