@@ -596,6 +596,39 @@ FodyWeavers.xsd
 # End of https://www.toptal.com/developers/gitignore/api/csharp,visualstudio,visualstudiocode
 .idea/.idea.BackOffice/.idea
 .DS_Store
+# Ignore Visual Studio temporary files, build results, and
+# user-specific files
+
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio Code settings
+.vscode/
+
+# Rider settings
+.idea/
+*.sln.iml
+
+# ASP.NET temporary files
+wwwroot/
+
+# Configuration files
+appsettings.Development.json
+
+# Other
+*.swp
+*.DS_Store
+Thumbs.db
 
 
 
