@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "4t0hPUgB8rY=",
+  "success": true,
+  "projectFilePath": "/Volumes/Work/Emata/Others/Cases/Emata.Exercises.LoansManagement/src/Emata.Exercises.LoanManagement.API/Emata.Exercises.LoanManagement.API.csproj",
+  "expectedPackageFiles": [
+    "/Users/daveagaba/.nuget/packages/microsoft.aspnetcore.openapi/9.0.0/microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "/Users/daveagaba/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
