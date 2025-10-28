@@ -77,6 +77,24 @@ dotnet test --collect:"XPlat Code Coverage"
 
 The API will be available at `https://localhost:7xxx` when running locally. Check the `Properties/launchSettings.json` file for exact port numbers.
 
+## Documentation
+
+Comprehensive documentation is available in the `/docs` folder:
+
+### 📚 Documentation Menu
+
+- **[🏗️ Architecture Overview](docs/architecture.md)** - Learn about the modular monolith architecture, what it means, and how the system is organized into modules
+- **[📁 Module Structure](docs/module-structure.md)** - Understand how each module is structured with Domain, Infrastructure, and Presentation layers
+- **[🌐 API Endpoints](docs/api-endpoints.md)** - Complete reference of all available API endpoints and their usage
+
+### Quick Navigation
+
+| Topic | Description | Link |
+|-------|-------------|------|
+| **System Architecture** | Modular monolith pattern, module overview | [architecture.md](docs/architecture.md) |
+| **Code Organization** | Domain/Infrastructure/Presentation structure | [module-structure.md](docs/module-structure.md) |
+| **API Reference** | Endpoints, request/response formats | [api-endpoints.md](docs/api-endpoints.md) |
+
 ## Development Notes
 
 This project serves as a technical exercise and may include:
