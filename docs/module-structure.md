@@ -1,120 +1,92 @@
 # Module Structure
 
-Each module in the Loans Management system follows a consistent organizational pattern based on Domain-Driven Design (DDD) principles and Clean Architecture concepts.
-
-## Standard Module Layout
-
-Every module is organized into three main folders that separate concerns:
+Each module follows a consistent Domain-Driven Design (DDD) pattern with three layers:
 
 ```
 ModuleName/
-├── Domain/              # Business entities and domain logic
-├── Infrastructure/      # Technical implementation details
-│   ├── Data/           # Entity Framework related code
-│   │   ├── DbContext           # Database context
-│   │   ├── EntityConfigurations/  # EF entity configurations
-│   │   └── Migrations/         # Database migrations
-│   └── Configuration/  # Module-specific configuration (if needed)
-└── Presentation/       # API endpoints and controllers
+├── Domain/              # Business entities
+├── Infrastructure/      
+│   └── Data/           # EF DbContext, configurations, migrations
+└── Presentation/       # API endpoints
 ```
 
-## Folder Responsibilities
+## Layer Responsibilities
 
-### Domain Folder
-**Purpose**: Contains the core business entities and domain logic
+### Domain
+Pure business entities and logic. No external dependencies.
 
-**Contents**:
-- **Entities**: Plain C# classes representing business concepts (e.g., `Borrower.cs`, `Loan.cs`, `Address.cs`)
-- **Value Objects**: Immutable objects that describe characteristics of entities
-- **Domain Services**: Business logic that doesn't naturally fit within entities
-- **Domain Events**: Events that represent important business occurrences
+### Infrastructure/Data  
+- **DbContext**: Database operations
+- **EntityConfigurations/**: EF mappings and relationships  
+- **Migrations/**: Database schema versions
 
-**Key Principles**:
-- No dependencies on external frameworks
-- Contains pure business logic
-- Framework-agnostic code
+### Presentation
+HTTP endpoints implementing `IEndpoints` interface.
 
-### Infrastructure Folder
-**Purpose**: Handles technical implementation details and external integrations
+## Working with Database Migrations
 
-**Structure**:
+Each module manages its own database context and migrations.
 
-#### Data Subfolder
-Contains Entity Framework Core related components:
+### Creating Migrations
 
-- **DbContext**: Database context class that manages entity tracking and database operations
-  - Example: `BorrowersDbContext.cs`, `LoansDbContext.cs`
-- **EntityConfigurations/**: EF Core entity type configurations
-  - Fluent API configurations for each entity
-  - Database table mappings, constraints, and relationships
-- **Migrations/**: EF Core database migration files
-  - Version-controlled database schema changes
-  - Auto-generated migration code
-
-#### Configuration Subfolder (when present)
-- Module-specific configuration classes
-- Dependency injection setup
-- Infrastructure service registrations
-
-### Presentation Folder
-**Purpose**: Exposes module functionality through HTTP endpoints
-
-**Contents**:
-- **Endpoint Classes**: Classes implementing `IEndpoints` interface
-- **API Contracts**: Request/Response DTOs specific to the module
-- **Endpoint Registration**: Methods to configure routing and HTTP verbs
-
-**Key Features**:
-- RESTful endpoint design
-- Minimal API approach using .NET's minimal APIs
-- Clear separation between HTTP concerns and business logic
-
-## Module Examples
-
-### Borrowers Module Structure
-```
-Emata.Exercise.LoansManagement.Borrowers/
-├── Domain/
-│   ├── Borrower.cs         # Main borrower entity
-│   ├── Partner.cs          # Partner entity
-│   └── Address.cs          # Address value object
-├── Infrastructure/
-│   └── Data/
-│       ├── BorrowersDbContext.cs
-│       ├── EntityConfigurations/
-│       └── Migrations/
-└── Presentation/
-    ├── BorrowersEndpoints.cs
-    └── PartnersEndpoints.cs
+**For Borrowers module:**
+```bash
+# From solution root
+dotnet ef migrations add InitialCreate \
+  --project src/modules/Emata.Exercise.LoansManagement.Borrowers \
+  --context BorrowersDbContext
 ```
 
-### Loans Module Structure
-```
-Emata.Exercise.LoansManagement.Loans/
-├── Domain/
-│   └── Loan.cs             # Main loan entity
-├── Infrastructure/
-│   └── Data/
-│       ├── LoansDbContext.cs
-│       ├── EntityConfigurations/
-│       └── Migrations/
-└── LoansEndpoints.cs       # Endpoints at module root
+**For Loans module:**
+```bash
+# From solution root  
+dotnet ef migrations add InitialCreate \
+  --project src/modules/Emata.Exercise.LoansManagement.Loans \
+  --context LoansDbContext
 ```
 
-### Shared Module Structure
-```
-Emata.Exercise.LoansManagement.Shared/
-├── Infrastructure/
-│   └── EntityCoreExtensions.cs  # Common EF extensions
-└── Endpoints/
-    ├── IEndpoints.cs             # Endpoint interface
-    └── EndpointConfigurationExtensions.cs  # Registration utilities
+### Running Migrations
+
+**Automatic (recommended):**
+Migrations run automatically at application startup via:
+```csharp
+// In Program.cs
+await app.MigrateBorrowersDatabaseAsync();
+await app.MigrateLoansDatabaseAsync();
 ```
 
-## Benefits of This Structure
+**Manual execution:**
+```bash
+# Borrowers module
+dotnet ef database update \
+  --project src/modules/Emata.Exercise.LoansManagement.Borrowers \
+  --context BorrowersDbContext
 
-1. **Separation of Concerns**: Each folder has a single, well-defined responsibility
-2. **Testability**: Domain logic is isolated from infrastructure concerns
-3. **Maintainability**: Consistent organization across all modules
-4. **Scalability**: Easy to add new modules following the same pattern
-5. **Database Independence**: Domain entities are not coupled to specific database implementations
+# Loans module  
+dotnet ef database update \
+  --project src/modules/Emata.Exercise.LoansManagement.Loans \
+  --context LoansDbContext
+```
+
+## Module Architecture Diagram
+
+```mermaid
+graph TB
+    API[API Project] --> BM[Borrowers Module]
+    API --> LM[Loans Module]
+    API --> SM[Shared Module]
+    
+    BM --> BD[Borrowers Domain]
+    BM --> BI[Borrowers Infrastructure]
+    BM --> BP[Borrowers Presentation]
+    
+    LM --> LD[Loans Domain]
+    LM --> LI[Loans Infrastructure]
+    LM --> LP[Loans Presentation]
+    
+    SM --> SI[Shared Infrastructure]
+    SM --> SE[Shared Endpoints]
+    
+    BI --> BDB[(Borrowers DB)]
+    LI --> LDB[(Loans DB)]
+```

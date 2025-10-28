@@ -1,67 +1,90 @@
 # Application Architecture
 
-## Overview
+## Modular Monolith Pattern
 
-This loans management system is built using a **modular monolith** architectural pattern, which combines the simplicity of a monolithic deployment with the organizational benefits of modular design.
+Single deployable application organized into business domain modules:
+- **Single Deployment**: One unit, simplified operations
+- **Modular Organization**: Domain-based modules with clear boundaries  
+- **Shared Infrastructure**: Common database access, logging, configuration
 
-## What is a Modular Monolith?
+Provides better organization than traditional monoliths while avoiding microservices complexity.
 
-A modular monolith is an architectural approach where:
+## System Modules
 
-- **Single Deployment Unit**: The entire application is deployed as one unit, simplifying deployment and operations
-- **Modular Organization**: Code is organized into distinct, loosely-coupled modules based on business domains
-- **Clear Module Boundaries**: Each module has well-defined responsibilities and interfaces
-- **Shared Infrastructure**: Common concerns like database access, logging, and configuration are shared across modules
+```mermaid
+graph LR
+    subgraph API["🌐 API Project"]
+        EP[Endpoints]
+        SV[Services]
+        MG[Migrations]
+    end
+    
+    subgraph BM["👥 Borrowers Module"]
+        BE[Borrower Entity]
+        PA[Partner Entity] 
+        AD[Address Entity]
+        BDB[(Borrowers DB)]
+    end
+    
+    subgraph LM["💰 Loans Module"]
+        LE[Loan Entity]
+        IR[InterestRate]
+        DU[Duration]
+        LDB[(Loans DB)]
+    end
+    
+    subgraph SM["🔧 Shared Module"]
+        IE[IEndpoints]
+        EX[Extensions]
+        CM[Common Utils]
+    end
+    
+    API --> BM
+    API --> LM
+    API --> SM
+    BM --> BDB
+    LM --> LDB
+```
 
-This approach provides a middle ground between traditional monoliths and microservices, offering better organization and maintainability while avoiding the complexity of distributed systems.
+### Borrowers Module
+- **Entities**: `Borrower`, `Partner`, `Address`
+- **Purpose**: Borrower and partner management
 
-## Application Modules
+### Loans Module  
+- **Entities**: `Loan` with `InterestRate`, `Duration`
+- **Purpose**: Loan operations and tracking
 
-The Loans Management system consists of three main modules:
+### Shared Module
+- **Components**: `IEndpoints`, common extensions
+- **Purpose**: Cross-cutting infrastructure utilities
 
-### 1. Borrowers Module
-**Purpose**: Manages borrower information and partner relationships
+## API Integration Flow
 
-**Key Entities**:
-- `Borrower`: Represents individuals or entities applying for loans
-- `Partner`: Represents business partners in the loan process
-- `Address`: Represents physical addresses for borrowers
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as API
+    participant B as Borrowers Module
+    participant L as Loans Module
+    participant D as Database
+    
+    C->>A: HTTP Request
+    A->>A: Route to Module
+    alt Borrowers Endpoint
+        A->>B: Handle Request
+        B->>D: Query/Update
+        D-->>B: Data
+        B-->>A: Response
+    else Loans Endpoint
+        A->>L: Handle Request
+        L->>D: Query/Update  
+        D-->>L: Data
+        L-->>A: Response
+    end
+    A-->>C: HTTP Response
+```
 
-**Responsibilities**:
-- Borrower registration and management
-- Partner management
-- Address information handling
-
-### 2. Loans Module
-**Purpose**: Handles all loan-related operations and data
-
-**Key Entities**:
-- `Loan`: Represents individual loan records with terms, amounts, and status
-
-**Responsibilities**:
-- Loan creation and management
-- Loan status tracking
-- Loan data retrieval and reporting
-
-### 3. Shared Module
-**Purpose**: Provides common infrastructure and utilities used across all modules
-
-**Key Components**:
-- Common endpoint abstractions
-- Shared infrastructure components
-- Cross-cutting concerns
-
-**Responsibilities**:
-- Endpoint configuration utilities
-- Shared data access patterns
-- Common infrastructure services
-
-## Module Integration
-
-All modules are integrated into the main API project (`Emata.Exercise.LoansManagement.API`) which:
-- Registers all module services
-- Configures module endpoints
-- Handles module database migrations
-- Provides a unified API surface
-
-The integration follows a plugin-like pattern where each module exposes extension methods to register its services and endpoints with the main application.
+Each module registers via extension methods:
+- `AddBorrowersModule(configuration)`
+- `AddLoansModule(configuration)` 
+- Auto-migration at startup
