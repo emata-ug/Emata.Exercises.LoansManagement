@@ -5,8 +5,8 @@ This document describes all available API endpoints in the Loans Management syst
 ## Base URL
 
 When running locally, the API is available at:
-- **HTTPS**: `https://localhost:7xxx` (port varies - check `Properties/launchSettings.json`)
-- **HTTP**: `http://localhost:5xxx` (port varies - check `Properties/launchSettings.json`)
+- **HTTPS**: `https://localhost:{port}` (e.g., `https://localhost:7000` - check `Properties/launchSettings.json`)
+- **HTTP**: `http://localhost:{port}` (e.g., `http://localhost:5000` - check `Properties/launchSettings.json`)
 
 ## API Documentation
 
@@ -101,7 +101,8 @@ The application provides interactive API documentation through:
   - `CreatedOn`: Record creation timestamp
 
 **Available DTOs**:
-- **LoanItem**: Data transfer object for loan information (currently empty - placeholder for future development)
+- **LoanItem**: Data transfer object for loan information
+  - *Note: Currently a placeholder class for future API response standardization*
 
 ## Common Components
 
@@ -121,7 +122,7 @@ Used in loan calculations:
 
 ## Authentication & Authorization
 
-Currently, the API does not implement authentication or authorization. All endpoints are publicly accessible.
+⚠️ **Development Environment Notice**: This is a demonstration/interview exercise project. The API currently does not implement authentication or authorization - all endpoints are publicly accessible. In a production environment, proper authentication, authorization, and security measures would be required.
 
 ## Error Handling
 
