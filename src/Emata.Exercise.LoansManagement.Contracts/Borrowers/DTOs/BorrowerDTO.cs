@@ -2,7 +2,7 @@ namespace Emata.Exercise.LoansManagement.Contracts.Borrowers.DTOs;
 
 public record BorrowerDTO
 {
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 
     public required string Surname { get; init; }
 

@@ -2,7 +2,7 @@ namespace Emata.Exercise.LoansManagement.Contracts.Loans.DTOs;
 
 public record AddLoanCommand : ICommand<LoanItem>
 {
-    public int BorrowerId { get; set; }
+    public Guid BorrowerId { get; set; }
 
     public decimal LoanAmount { get; set; }
 

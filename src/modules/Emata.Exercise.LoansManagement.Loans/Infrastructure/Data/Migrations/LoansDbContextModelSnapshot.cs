@@ -21,21 +21,16 @@ namespace Emata.Exercise.LoansManagement.Loans.Infrastructure.Data.Migrations
                 .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseHiLo(modelBuilder, "EntityFrameworkHiLoSequence");
-
-            modelBuilder.HasSequence("EntityFrameworkHiLoSequence")
-                .IncrementsBy(10);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Emata.Exercise.LoansManagement.Loans.Domain.Loan", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
-
-                    b.Property<int>("BorrowerId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BorrowerId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
@@ -63,8 +58,8 @@ namespace Emata.Exercise.LoansManagement.Loans.Infrastructure.Data.Migrations
                 {
                     b.OwnsOne("Emata.Exercise.LoansManagement.Loans.Domain.Duration", "Duration", b1 =>
                         {
-                            b1.Property<int>("LoanId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("LoanId")
+                                .HasColumnType("uuid");
 
                             b1.Property<int>("Length")
                                 .HasColumnType("integer");
@@ -86,8 +81,8 @@ namespace Emata.Exercise.LoansManagement.Loans.Infrastructure.Data.Migrations
 
                     b.OwnsOne("Emata.Exercise.LoansManagement.Loans.Domain.InterestRate", "InterestRate", b1 =>
                         {
-                            b1.Property<int>("LoanId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("LoanId")
+                                .HasColumnType("uuid");
 
                             b1.Property<decimal>("PercentageRate")
                                 .HasColumnType("numeric");

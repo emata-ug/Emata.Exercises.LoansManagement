@@ -2,9 +2,9 @@ namespace Emata.Exercise.LoansManagement.Contracts.Loans.DTOs;
 
 public record class LoanItem
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int BorrowerId { get; set; }
+    public Guid BorrowerId { get; set; }
 
     public decimal LoanAmount { get; set; }
 

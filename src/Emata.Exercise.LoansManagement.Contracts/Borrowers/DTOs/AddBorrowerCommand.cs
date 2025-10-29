@@ -20,5 +20,5 @@ public record AddBorrowerCommand : ICommand<BorrowerDTO>
 
     public string? Town { get; init; }
 
-    public int PartnerId { get; init; }
+    public Guid PartnerId { get; init; }
 }

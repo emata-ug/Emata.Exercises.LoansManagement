@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(BorrowersDbContext))]
-    [Migration("20251027113759_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20251029141437_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,18 +24,13 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
                 .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseHiLo(modelBuilder, "EntityFrameworkHiLoSequence");
-
-            modelBuilder.HasSequence("EntityFrameworkHiLoSequence")
-                .IncrementsBy(10);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Emata.Exercise.LoansManagement.Borrowers.Domain.Borrower", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
@@ -49,6 +44,11 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("GivenName")
                         .IsRequired()
@@ -64,8 +64,8 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
                         .HasColumnType("text")
                         .HasComputedColumnSql("    \"GivenName\" || ' ' || \"Surname\"", true);
 
-                    b.Property<int>("PartnerId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PartnerId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -85,11 +85,9 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
 
             modelBuilder.Entity("Emata.Exercise.LoansManagement.Borrowers.Domain.Partner", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -111,8 +109,8 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
 
                     b.OwnsOne("Emata.Exercise.LoansManagement.Borrowers.Domain.Address", "Address", b1 =>
                         {
-                            b1.Property<int>("BorrowerId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("BorrowerId")
+                                .HasColumnType("uuid");
 
                             b1.Property<string>("Country")
                                 .HasColumnType("text");
@@ -146,8 +144,8 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
                 {
                     b.OwnsOne("Emata.Exercise.LoansManagement.Borrowers.Domain.Address", "Address", b1 =>
                         {
-                            b1.Property<int>("PartnerId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("PartnerId")
+                                .HasColumnType("uuid");
 
                             b1.Property<string>("Country")
                                 .HasColumnType("text");

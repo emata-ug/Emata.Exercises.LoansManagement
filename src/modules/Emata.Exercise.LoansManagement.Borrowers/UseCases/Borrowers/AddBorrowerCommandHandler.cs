@@ -18,7 +18,7 @@ internal class AddBorrowerCommandHandler : ICommandHandler<AddBorrowerCommand, B
     public async Task<BorrowerDTO> Handle(AddBorrowerCommand request, CancellationToken cancellationToken = default)
     {
         //get partner by Id
-        var partner = await _dbContext.Partners.FindAsync(request.PartnerId, cancellationToken);
+        var partner = await _dbContext.Partners.FindAsync([request.PartnerId], cancellationToken);
         if (partner == null)
         {
             throw new Exception($"Partner with Id {request.PartnerId} not found."); //In real scenario, use a custom exception

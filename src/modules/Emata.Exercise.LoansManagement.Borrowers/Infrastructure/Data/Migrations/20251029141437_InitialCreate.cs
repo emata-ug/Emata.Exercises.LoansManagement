@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,17 +14,12 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
             migrationBuilder.EnsureSchema(
                 name: "Borrowers");
 
-            migrationBuilder.CreateSequence(
-                name: "EntityFrameworkHiLoSequence",
-                schema: "Borrowers",
-                incrementBy: 10);
-
             migrationBuilder.CreateTable(
                 name: "Partners",
                 schema: "Borrowers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Address = table.Column<string>(type: "jsonb", nullable: true)
                 },
@@ -38,16 +33,17 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
                 schema: "Borrowers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Surname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     GivenName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false, computedColumnSql: "    \"GivenName\" || ' ' || \"Surname\"", stored: true),
+                    Gender = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     IdentificationNumber = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    PartnerId = table.Column<int>(type: "integer", nullable: false),
+                    PartnerId = table.Column<Guid>(type: "uuid", nullable: false),
                     Address = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
@@ -78,10 +74,6 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data.Migration
 
             migrationBuilder.DropTable(
                 name: "Partners",
-                schema: "Borrowers");
-
-            migrationBuilder.DropSequence(
-                name: "EntityFrameworkHiLoSequence",
                 schema: "Borrowers");
         }
     }

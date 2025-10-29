@@ -42,7 +42,7 @@ public class BorrowersEndpoints : IEndpoints
         .WithDescription("Retrieves summaries of borrowers based on provided criteria.");
         
         //get borrower by id
-            app.MapGet($"{{id:int}}", async (int id, IQueryHandler<GetBorrowerByIdQuery, BorrowerDTO?> handler) =>
+            app.MapGet("{id:guid}", async (Guid id, IQueryHandler<GetBorrowerByIdQuery, BorrowerDTO?> handler) =>
             {
                 var borrower = await handler.Handle(new GetBorrowerByIdQuery(id));
                 return borrower is not null ? Results.Ok(borrower) : Results.NotFound();

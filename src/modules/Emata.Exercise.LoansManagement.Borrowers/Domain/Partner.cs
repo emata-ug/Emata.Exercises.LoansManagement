@@ -2,7 +2,7 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Domain;
 
 internal class Partner
 {
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
 
     public string Name { get; private set; } = string.Empty;
 
@@ -12,6 +12,7 @@ internal class Partner
     {
         return new Partner
         {
+            Id = Guid.CreateVersion7(),
             Name = name,
             Address = town is not null ? Address.Create(town) : null
         };

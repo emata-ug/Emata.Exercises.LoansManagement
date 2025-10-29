@@ -4,7 +4,7 @@ namespace Emata.Exercise.LoansManagement.Borrowers.Domain;
 
 internal class Borrower
 {
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
 
     public string Surname { get; private set; } = string.Empty;
 
@@ -26,7 +26,7 @@ internal class Borrower
 
     public Address? Address { get; private set; }
 
-    public int PartnerId { get; private set; }
+    public Guid PartnerId { get; private set; }
     public Partner? Partner { get; private set; }
 
     public static Borrower Create(
@@ -37,12 +37,13 @@ internal class Borrower
         string phoneNumber,
         DateTime createdOn,
         string? town,
-        int partnerId,
+        Guid partnerId,
         string? identificationNumber = null,
         string? email = null)
     {
         var borrower = new Borrower
         {
+            Id = Guid.CreateVersion7(),
             Surname = surname,
             GivenName = givenName,
             Gender = gender,

@@ -13,7 +13,7 @@ internal static class MappingExtensions
         {
             Id = partner.Id,
             Name = partner.Name,
-            AddressDTO = partner.Address is not null
+            Address = partner.Address is not null
                 ? new AddressDTO
                 {
                     Town = partner.Address.Town,

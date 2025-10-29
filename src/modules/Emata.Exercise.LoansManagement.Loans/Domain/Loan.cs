@@ -5,9 +5,9 @@ namespace Emata.Exercise.LoansManagement.Loans.Domain;
 
 internal class Loan
 {
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
 
-    public int BorrowerId { get; private set; }
+    public Guid BorrowerId { get; private set; }
 
     public decimal LoanAmount { get; private set; }
 
@@ -24,7 +24,7 @@ internal class Loan
     public DateTime CreatedOn { get; private set; }
 
     public static Loan Create(
-        int borrowerId,
+        Guid borrowerId,
         decimal loanAmount,
         DateOnly issueDate,
         InterestRate interestRate,
@@ -32,6 +32,7 @@ internal class Loan
         string? reference,
         string? reason) => new Loan
         {
+            Id = Guid.CreateVersion7(),
             BorrowerId = borrowerId,
             LoanAmount = loanAmount,
             IssueDate = issueDate,

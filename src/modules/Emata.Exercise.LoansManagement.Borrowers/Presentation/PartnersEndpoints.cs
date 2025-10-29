@@ -23,7 +23,7 @@ internal class PartnersEndpoints : IEndpoints
         //add more endpoints as needed
         app.MapPost($"", async (
             [FromBody] AddPartnerCommand command,
-            [FromServices] AddPartnerCommandHandler handler) =>
+            [FromServices]ICommandHandler<AddPartnerCommand, PartnerDTO> handler) =>
         {
             var partner = await handler.Handle(command);
             return Results.Created(string.Empty, partner);

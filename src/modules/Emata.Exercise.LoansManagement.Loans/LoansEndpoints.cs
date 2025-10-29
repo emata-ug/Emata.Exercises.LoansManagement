@@ -45,7 +45,7 @@ internal class LoansEndpoints : IEndpoints
         .WithDescription("Retrieves a list of all loans in the system.");
 
         //query for a specific loan
-        app.MapGet($"{{id:int}}", async (int id, LoansDbContext dbContext) =>
+        app.MapGet("{id:guid}", async (Guid id, LoansDbContext dbContext) =>
         {
             var loan = await dbContext.Loans
                 .FirstOrDefaultAsync(l => l.Id == id);

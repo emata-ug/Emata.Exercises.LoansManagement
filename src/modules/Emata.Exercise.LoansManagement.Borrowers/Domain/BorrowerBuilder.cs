@@ -17,7 +17,7 @@ internal sealed class BorrowerBuilder
     private string? _phoneNumber;
     private DateTime? _createdOn;
     private string? _town;
-    private int? _partnerId;
+    private Guid? _partnerId;
     private string? _identificationNumber;
     private string? _email;
 
@@ -29,7 +29,7 @@ internal sealed class BorrowerBuilder
     /// <summary>
     /// Convenience for starting a builder with a partner id.
     /// </summary>
-    public static BorrowerBuilder ForPartner(int partnerId) => new BorrowerBuilder().SetPartnerId(partnerId);
+    public static BorrowerBuilder ForPartner(Guid partnerId) => new BorrowerBuilder().SetPartnerId(partnerId);
 
     public BorrowerBuilder SetSurname(string surname)
     {
@@ -73,7 +73,7 @@ internal sealed class BorrowerBuilder
         return this;
     }
 
-    public BorrowerBuilder SetPartnerId(int partnerId)
+    public BorrowerBuilder SetPartnerId(Guid partnerId)
     {
         _partnerId = partnerId;
         return this;

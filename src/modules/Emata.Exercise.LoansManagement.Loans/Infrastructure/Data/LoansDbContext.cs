@@ -26,8 +26,7 @@ public class LoansDbContext : DbContext
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(LoansDbContext).Assembly);
        
-        //general configuration...
-        modelBuilder.UseHiLo();
+    // Removed HiLo sequence usage; GUID v7 IDs are generated in entity factories.
     }
 
     internal DbSet<Loan> Loans { get; set; }

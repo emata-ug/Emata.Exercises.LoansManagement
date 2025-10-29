@@ -9,13 +9,14 @@ public class BorrowerBuilderTests
     public void Build_WithAllRequiredFields_Succeeds()
     {
         // Arrange & Act
+        var partnerId = Guid.NewGuid();
         var borrower = BorrowerBuilder.Create()
             .SetSurname("Doe")
             .SetGivenName("John")
             .SetGender(Gender.Male)
             .SetDateOfBirth(new DateOnly(1990, 1, 1))
             .SetPhoneNumber("+123456789")
-            .SetPartnerId(10)
+            .SetPartnerId(partnerId)
             .SetTown("Kampala")
             .SetEmail("john.doe@example.com")
             .Build();
@@ -26,7 +27,7 @@ public class BorrowerBuilderTests
         Assert.Equal("John Doe", borrower.Name);
         Assert.Equal(new DateOnly(1990, 1, 1), borrower.DateOfBirth);
         Assert.Equal("+123456789", borrower.PhoneNumber);
-        Assert.Equal(10, borrower.PartnerId);
+        Assert.Equal(partnerId, borrower.PartnerId);
         Assert.NotNull(borrower.Address);
         Assert.Equal("Kampala", borrower.Address!.Town);
         Assert.Equal("john.doe@example.com", borrower.Email);

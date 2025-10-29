@@ -9,7 +9,7 @@ internal class BorrowerService(IQueryHandler<GetBorrowerByIdQuery, BorrowerDTO?>
 {
     private readonly IQueryHandler<GetBorrowerByIdQuery, BorrowerDTO?> _getBorrowerByIdQueryHandler = getBorrowerByIdQueryHandler;
 
-    public Task<BorrowerDTO?> GetBorrowerByIdAsync(int borrowerId, CancellationToken cancellationToken = default)
+    public Task<BorrowerDTO?> GetBorrowerByIdAsync(Guid borrowerId, CancellationToken cancellationToken = default)
     {
         return _getBorrowerByIdQueryHandler.Handle(new GetBorrowerByIdQuery(borrowerId), cancellationToken);
     }

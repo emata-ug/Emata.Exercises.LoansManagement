@@ -24,8 +24,8 @@ public static class BorrowersExtensions
         IConfiguration configuration,
         List<Assembly> mediatorAssemblies)
     {
-    //register module assembly once for all handlers
-    mediatorAssemblies.Add(typeof(BorrowersExtensions).Assembly);
+        //register module assembly once for all handlers
+        mediatorAssemblies.Add(typeof(BorrowersExtensions).Assembly);
 
         //database context registration
         var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -37,13 +37,13 @@ public static class BorrowersExtensions
             });
         });
 
-    // application services & handlers
-    services.AddScoped<ICommandHandler<AddBorrowerCommand, BorrowerDTO>, AddBorrowerCommandHandler>();
-    services.AddScoped<IQueryHandler<GetBorrowerByIdQuery, BorrowerDTO?>, GetBorrowerByIdQueryHandler>();
-    services.AddScoped<IQueryHandler<GetBorrowerSummariesQuery, List<BorrowerSummaryDTO>>, GetBorrowerSummariesQueryHandler>();
-    services.AddScoped<ICommandHandler<AddPartnerCommand, PartnerDTO>, AddPartnerCommandHandler>();
-    services.AddScoped<IQueryHandler<GetPartnersQuery, List<PartnerDTO>>, GetPartnersQueryHandler>();
-    services.AddScoped<IBorrowerService, BorrowerService>();
+        // application services & handlers
+        services.AddScoped<ICommandHandler<AddBorrowerCommand, BorrowerDTO>, AddBorrowerCommandHandler>();
+        services.AddScoped<IQueryHandler<GetBorrowerByIdQuery, BorrowerDTO?>, GetBorrowerByIdQueryHandler>();
+        services.AddScoped<IQueryHandler<GetBorrowerSummariesQuery, List<BorrowerSummaryDTO>>, GetBorrowerSummariesQueryHandler>();
+        services.AddScoped<ICommandHandler<AddPartnerCommand, PartnerDTO>, AddPartnerCommandHandler>();
+        services.AddScoped<IQueryHandler<GetPartnersQuery, List<PartnerDTO>>, GetPartnersQueryHandler>();
+        services.AddScoped<IBorrowerService, BorrowerService>();
 
         //register endpoints...
         services.AddEndpoints(typeof(BorrowersExtensions).Assembly);

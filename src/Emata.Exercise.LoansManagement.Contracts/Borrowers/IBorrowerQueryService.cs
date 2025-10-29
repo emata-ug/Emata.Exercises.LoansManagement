@@ -5,5 +5,5 @@ namespace Emata.Exercise.LoansManagement.Contracts.Borrowers;
 
 public interface IBorrowerService
 {
-    Task<BorrowerDTO?> GetBorrowerByIdAsync(int borrowerId, CancellationToken cancellationToken = default);
+    Task<BorrowerDTO?> GetBorrowerByIdAsync(Guid borrowerId, CancellationToken cancellationToken = default);
 }
