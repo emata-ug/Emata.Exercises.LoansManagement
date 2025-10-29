@@ -1,27 +1,43 @@
+using Emata.Exercise.LoansManagement.Contracts.Loans;
+using Emata.Exercise.LoansManagement.Contracts.Loans.DTOs;
 using Emata.Exercise.LoansManagement.Loans.Infrastructure.Data;
+using Emata.Exercise.LoansManagement.Loans.UseCases;
 using Emata.Exercise.LoansManagement.Shared.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Emata.Exercise.LoansManagement.Loans;
 
-public class LoansEndpoints : IEndpoints
+internal class LoansEndpoints : IEndpoints
 {
     public string? Prefix => "loans";
 
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet($"health", () => Results.Ok("Loans API is healthy"))
-        .WithSummary("Get Health")
-        .WithDescription("Checks the health of the Loans API");
+            .WithSummary("Get Health")
+            .WithDescription("Checks the health of the Loans API");
+
+        //create a new loan
+        app.MapPost($"", async (
+            [FromServices] AddLoanCommandHandler handler,
+            [FromBody] AddLoanCommand addLoanRequest) =>
+        {
+            var loanItem = await handler.Handle(addLoanRequest);
+            return Results.Created($"/loans/{loanItem.BorrowerId}", loanItem);
+        })
+        .WithSummary("Create a new loan")
+        .WithDescription("Creates a new loan for a borrower.");
 
         //query for loans
-        app.MapGet($"", async (LoansDbContext dbContext) =>
+        app.MapGet($"", async (
+            [FromServices] GetLoansQueryHandler handler,
+            [AsParameters] GetLoansQuery request) =>
         {
-            var loans = await dbContext.Loans
-                .ToListAsync();
+            var loans = await handler.Handle(request);
             return Results.Ok(loans);
         })
         .WithName("Get All Loans")

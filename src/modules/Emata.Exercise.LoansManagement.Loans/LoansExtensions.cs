@@ -1,4 +1,10 @@
+using System.Reflection;
+using System.Windows.Input;
+using Emata.Exercise.LoansManagement.Contracts.Loans;
+using Emata.Exercise.LoansManagement.Contracts.Loans.DTOs;
 using Emata.Exercise.LoansManagement.Loans.Infrastructure.Data;
+using Emata.Exercise.LoansManagement.Loans.UseCases;
+using Emata.Exercise.LoansManagement.Shared;
 using Emata.Exercise.LoansManagement.Shared.Endpoints;
 using Emata.Exercise.LoansManagement.Shared.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -13,11 +19,12 @@ public static class LoansExtensions
 
     internal const string ModuleName = "Loans";
 
-    public static IServiceCollection AddLoansModule(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddLoansModule(this IServiceCollection services,
+        IConfiguration configuration,
+        List<Assembly> mediatorAssemblies)
     {
-        //register module services here
-        services.AddEndpoints(
-            assembly: typeof(LoansExtensions).Assembly);
+        //register module assembly for mediator handlers
+        mediatorAssemblies.Add(typeof(AddLoanCommandHandler).Assembly);
 
         //database context registration
         var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -28,6 +35,13 @@ public static class LoansExtensions
                 dbOptions.MigrationsHistoryTable("__EFMigrationsHistory", ModuleName);
             });
         });
+
+    // application services
+    services.AddScoped<ICommandHandler<AddLoanCommand, LoanItem>, AddLoanCommandHandler>();
+    services.AddScoped<IQueryHandler<GetLoansQuery, List<LoanItem>>, GetLoansQueryHandler>();
+
+    //register endpoints...
+    services.AddEndpoints(typeof(LoansExtensions).Assembly);
 
         return services;
     }

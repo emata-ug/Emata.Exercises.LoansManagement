@@ -1,44 +1,72 @@
 using System;
+using Emata.Exercise.LoansManagement.Contracts.Loans.DTOs;
 
 namespace Emata.Exercise.LoansManagement.Loans.Domain;
 
 internal class Loan
 {
-    public int Id { get; set; }
+    public int Id { get; private set; }
 
-    public decimal LoanAmount { get; set; }
+    public int BorrowerId { get; private set; }
 
-    public DateOnly IssueDate { get; set; }
+    public decimal LoanAmount { get; private set; }
 
-    public required InterestRate InterestRate { get; set; }
+    public DateOnly IssueDate { get; private set; }
 
-    public Duration? Duration { get; set; }
+    public InterestRate InterestRate { get; private set; } = null!;
 
-    public string? LoanApplicationId { get; set; }
+    public Duration?    Duration { get; private set; }
 
-    public DateTime CreatedOn { get; set; }
+    public string? Reference { get; private set; }
 
-    
+    public string? Reason { get; private set; }
+
+    public DateTime CreatedOn { get; private set; }
+
+    public static Loan Create(
+        int borrowerId,
+        decimal loanAmount,
+        DateOnly issueDate,
+        InterestRate interestRate,
+        Duration duration,
+        string? reference,
+        string? reason) => new Loan
+        {
+            BorrowerId = borrowerId,
+            LoanAmount = loanAmount,
+            IssueDate = issueDate,
+            InterestRate = interestRate,
+            Duration = duration,
+            Reference = reference,
+            Reason = reason,
+            CreatedOn = DateTime.UtcNow
+        };
+
+
 }
 
 internal class Duration
 {
-    public int Length { get; set; }
+    public int Length { get; private set; }
 
-    public Period Period { get; set; }
+    public Period Period { get; private set; }
+
+    public static Duration Create(int length, Period period) => new()
+    {
+        Length = length,
+        Period = period
+    };
 }
 
 internal class InterestRate
 {
-    public decimal Rate { get; set; }
+    public decimal PercentageRate { get; private set; }
 
-    public Period Period { get; set; }
-}
+    public Period Period { get; private set; }
 
-public enum Period
-{
-    Annual = 0,
-    Monthly = 1,
-    Weekly = 2,
-    Daily = 3
+    public static InterestRate Create(decimal percentageRate, Period period) => new()
+    {
+        PercentageRate = percentageRate,
+        Period = period
+    };
 }

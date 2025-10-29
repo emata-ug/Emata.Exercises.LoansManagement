@@ -1,0 +1,1 @@
+﻿global using Emata.Exercise.LoansManagement.Contracts.Shared;

@@ -6,8 +6,5 @@ public record class PartnerDTO
 
     public required string Name { get; set; }
 
-    public string? Town { get; set; }
+    public AddressDTO? AddressDTO { get; set; }
 }
-
-
-
