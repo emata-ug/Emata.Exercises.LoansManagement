@@ -18,6 +18,7 @@ internal class GetBorrowerSummariesQueryHandler : IQueryHandler<GetBorrowerSumma
     {
         var borrowers = await _dbContext.Borrowers
             .Where(b => query.BorrowerIds == null || query.BorrowerIds.Contains(b.Id))
+            .Where(b => query.PartnerIds == null || query.PartnerIds.Contains(b.PartnerId))
             .Select(b => b.ToSummaryDTO())
             .ToListAsync(cancellationToken);
 

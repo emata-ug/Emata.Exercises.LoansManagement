@@ -59,7 +59,7 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
     public async Task GetBorrowerSummaries_ShouldReturnAllBorrowers()
     {
         // Act
-        var response = await _borrowersApi.GetBorrowersAsync(new GetBorrowerSummariesQuery());
+        var response = await _borrowersApi.GetBorrowersAsync();
 
         // Assert
         await response.EnsureSuccessfulAsync();
@@ -73,11 +73,7 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
     public async Task GetBorrowerSummaries_ShouldFilterByPartnerId()
     {
         // Act
-        var query = new GetBorrowerSummariesQuery
-        {
-            PartnerIds = [_partner.Id]
-        };
-        var response = await _borrowersApi.GetBorrowersAsync(query);
+        var response = await _borrowersApi.GetBorrowersAsync(partnerIds: [_partner.Id]);
 
         // Assert
         await response.EnsureSuccessfulAsync();
@@ -94,11 +90,7 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
         var borrowerIds = _borrowers.Take(3).Select(b => b.Id).ToArray();
 
         // Act
-        var query = new GetBorrowerSummariesQuery
-        {
-            BorrowerIds = borrowerIds
-        };
-        var response = await _borrowersApi.GetBorrowersAsync(query);
+        var response = await _borrowersApi.GetBorrowersAsync(borrowerIds: borrowerIds);
 
         // Assert
         await response.EnsureSuccessfulAsync();
@@ -113,11 +105,7 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
     public async Task GetBorrowerSummaries_ShouldReturnEmptyListForNonExistentPartner()
     {
         // Act
-        var query = new GetBorrowerSummariesQuery
-        {
-            PartnerIds = [Guid.NewGuid()] // Non-existent partner
-        };
-        var response = await _borrowersApi.GetBorrowersAsync(query);
+        var response = await _borrowersApi.GetBorrowersAsync(partnerIds: [Guid.NewGuid()]);
 
         // Assert
         await response.EnsureSuccessfulAsync();
@@ -131,11 +119,7 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
     public async Task GetBorrowerSummaries_ShouldReturnEmptyListForNonExistentBorrowerIds()
     {
         // Act
-        var query = new GetBorrowerSummariesQuery
-        {
-            BorrowerIds = [Guid.NewGuid(), Guid.NewGuid()]
-        };
-        var response = await _borrowersApi.GetBorrowersAsync(query);
+        var response = await _borrowersApi.GetBorrowersAsync(borrowerIds: [Guid.NewGuid(), Guid.NewGuid()]);
 
         // Assert
         await response.EnsureSuccessfulAsync();
@@ -152,12 +136,7 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
         var borrowerIds = _borrowers.Take(2).Select(b => b.Id).ToArray();
 
         // Act
-        var query = new GetBorrowerSummariesQuery
-        {
-            PartnerIds = [_partner.Id],
-            BorrowerIds = borrowerIds
-        };
-        var response = await _borrowersApi.GetBorrowersAsync(query);
+        var response = await _borrowersApi.GetBorrowersAsync(partnerIds: [_partner.Id], borrowerIds: borrowerIds);
 
         // Assert
         await response.EnsureSuccessfulAsync();

@@ -44,6 +44,7 @@ internal static class MappingExtensions
         {
             Id = borrower.Id,
             Name = borrower.Name,
+            Gender = borrower.Gender,
             PartnerName = borrower.Partner?.Name,
             PhoneNumber = borrower.PhoneNumber,
             Town = borrower.Address?.Town
@@ -59,6 +60,7 @@ internal static class MappingExtensions
             Surname = borrower.Surname,
             GivenName = borrower.GivenName,
             Name = borrower.Name,
+            Gender = borrower.Gender,
             DateOfBirth = borrower.DateOfBirth,
             IdentificationNumber = borrower.IdentificationNumber,
             PhoneNumber = borrower.PhoneNumber,

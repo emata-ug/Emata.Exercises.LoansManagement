@@ -15,7 +15,7 @@ public interface IBorrowersRefitApi
     Task<ApiResponse<BorrowerDTO>> AddBorrowerAsync([Body] AddBorrowerCommand borrower);
 
     [Get("/borrowers/summaries")]
-    Task<ApiResponse<List<BorrowerSummaryDTO>>> GetBorrowersAsync([Query] GetBorrowerSummariesQuery query);
+    Task<ApiResponse<List<BorrowerSummaryDTO>>> GetBorrowersAsync([Query(CollectionFormat.Multi)] Guid[]? partnerIds = null, [Query(CollectionFormat.Multi)] Guid[]? borrowerIds = null);
 
     [Get("/borrowers/{id}")]
     Task<ApiResponse<BorrowerDTO>> GetBorrowerByIdAsync(Guid id);
