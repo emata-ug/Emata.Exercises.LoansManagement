@@ -27,6 +27,7 @@ internal class AddBorrowerCommandHandler : ICommandHandler<AddBorrowerCommand, B
         var borrower = BorrowerBuilder.Create()
             .SetSurname(request.Surname)
             .SetGivenName(request.GivenName)
+            .SetGender(request.Gender)
             .SetPhoneNumber(request.PhoneNumber)
             .SetEmail(request.Email)
             .SetDateOfBirth(request.DateOfBirth)
