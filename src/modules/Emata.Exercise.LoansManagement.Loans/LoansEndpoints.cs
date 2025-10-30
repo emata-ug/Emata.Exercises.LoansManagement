@@ -2,6 +2,7 @@ using Emata.Exercise.LoansManagement.Contracts.Loans;
 using Emata.Exercise.LoansManagement.Contracts.Loans.DTOs;
 using Emata.Exercise.LoansManagement.Loans.Infrastructure.Data;
 using Emata.Exercise.LoansManagement.Loans.UseCases;
+using Emata.Exercise.LoansManagement.Shared;
 using Emata.Exercise.LoansManagement.Shared.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +24,7 @@ internal class LoansEndpoints : IEndpoints
 
         //create a new loan
         app.MapPost($"", async (
-            [FromServices] AddLoanCommandHandler handler,
+            [FromServices] ICommandHandler<AddLoanCommand, LoanItem> handler,
             [FromBody] AddLoanCommand addLoanRequest) =>
         {
             var loanItem = await handler.Handle(addLoanRequest);
@@ -34,7 +35,7 @@ internal class LoansEndpoints : IEndpoints
 
         //query for loans
         app.MapGet($"", async (
-            [FromServices] GetLoansQueryHandler handler,
+            [FromServices] IQueryHandler<GetLoansQuery, List<LoanItem>> handler,
             [AsParameters] GetLoansQuery request) =>
         {
             var loans = await handler.Handle(request);

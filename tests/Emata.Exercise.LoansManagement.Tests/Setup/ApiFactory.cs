@@ -5,6 +5,7 @@ using Emata.Exercise.LoansManagement.Borrowers.Infrastructure.Data;
 using Emata.Exercise.LoansManagement.Loans;
 using Emata.Exercise.LoansManagement.Loans.Infrastructure.Data;
 using Emata.Exercise.LoansManagement.Tests.Borrowers;
+using Emata.Exercise.LoansManagement.Tests.Loans;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ namespace Emata.Exercise.LoansManagement.Tests.Setup;
 public class ApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
     public IBorrowersRefitApi BorrowersApi {get; private set;} = default!;
+    public ILoansRefitApi LoansApi {get; private set;} = default!;
     private PostgreSqlContainer _postgresContainer = new PostgreSqlBuilder()
             .WithDatabase("LoansManagementTests")
             .WithUsername("postgres")
@@ -31,7 +33,12 @@ public class ApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 
     private static RefitSettings DefaultRefitSettings => new()
     {
-        CollectionFormat = CollectionFormat.Multi
+        CollectionFormat = CollectionFormat.Multi,
+        ContentSerializer = new SystemTextJsonContentSerializer(
+            new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+            })
     };
 
     private static string[] DbSchemas =>
@@ -49,6 +56,7 @@ public class ApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
         //initialize Refit APIs
         HttpClient httpClient = CreateClient();
         BorrowersApi = RestService.For<IBorrowersRefitApi>(httpClient, DefaultRefitSettings);
+        LoansApi = RestService.For<ILoansRefitApi>(httpClient, DefaultRefitSettings);
 
         //initialize database schemas
         await _dbConnection.OpenAsync();

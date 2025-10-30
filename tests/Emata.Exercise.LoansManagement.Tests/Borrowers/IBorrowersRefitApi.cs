@@ -12,10 +12,10 @@ public interface IBorrowersRefitApi
     Task<ApiResponse<List<PartnerDTO>>> GetPartnersAsync();
 
     [Post("/borrowers")]
-    Task<ApiResponse<BorrowerDTO>> AddBorrowerAsync(AddBorrowerCommand borrower);
+    Task<ApiResponse<BorrowerDTO>> AddBorrowerAsync([Body] AddBorrowerCommand borrower);
 
-    [Get("/borrowers")]
-    Task<ApiResponse<List<BorrowerDTO>>> GetBorrowersAsync(GetBorrowerSummariesQuery query);
+    [Get("/borrowers/summaries")]
+    Task<ApiResponse<List<BorrowerSummaryDTO>>> GetBorrowersAsync([Query] GetBorrowerSummariesQuery query);
 
     [Get("/borrowers/{id}")]
     Task<ApiResponse<BorrowerDTO>> GetBorrowerByIdAsync(Guid id);

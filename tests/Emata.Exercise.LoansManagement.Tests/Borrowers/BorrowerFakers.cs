@@ -12,4 +12,18 @@ public static class BorrowerFakers
             Name = faker.Company.CompanyName(),
             Town = faker.Address.City()
         });
+
+    public static Faker<AddBorrowerCommand> AddBorrowerCommandFaker => new Faker<AddBorrowerCommand>()
+        .CustomInstantiator(faker => new AddBorrowerCommand()
+        {
+            Surname = faker.Name.LastName(),
+            GivenName = faker.Name.FirstName(),
+            Gender = faker.PickRandom<Gender>(),
+            DateOfBirth = DateOnly.FromDateTime(faker.Date.Past(50, DateTime.Now.AddYears(-18))),
+            IdentificationNumber = faker.Random.AlphaNumeric(10),
+            PhoneNumber = faker.Phone.PhoneNumber(),
+            Email = faker.Internet.Email(),
+            Town = faker.Address.City(),
+            PartnerId = Guid.NewGuid()
+        });
 }
