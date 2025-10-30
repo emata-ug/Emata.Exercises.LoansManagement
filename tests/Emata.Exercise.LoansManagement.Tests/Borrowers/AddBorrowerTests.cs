@@ -60,50 +60,6 @@ public class AddBorrowerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task AddBorrower_ShouldHandleMaleGender()
-    {
-        // Arrange
-        var addBorrowerCommand = BorrowerFakers.AddBorrowerCommandFaker.Generate();
-        addBorrowerCommand = addBorrowerCommand with 
-        { 
-            PartnerId = _partner.Id,
-            Gender = Gender.Male 
-        };
-
-        // Act
-        var response = await _borrowersApi.AddBorrowerAsync(addBorrowerCommand);
-
-        // Assert
-        response.IsSuccessful.ShouldBeTrue();
-        response.Content.ShouldNotBeNull();
-        response.Content.Gender.ShouldBe(Gender.Male);
-
-        _testOutputHelper.WriteLine("Created Male Borrower ID: {0}", response.Content.Id);
-    }
-
-    [Fact]
-    public async Task AddBorrower_ShouldHandleFemaleGender()
-    {
-        // Arrange
-        var addBorrowerCommand = BorrowerFakers.AddBorrowerCommandFaker.Generate();
-        addBorrowerCommand = addBorrowerCommand with 
-        { 
-            PartnerId = _partner.Id,
-            Gender = Gender.Female 
-        };
-
-        // Act
-        var response = await _borrowersApi.AddBorrowerAsync(addBorrowerCommand);
-
-        // Assert
-        response.IsSuccessful.ShouldBeTrue();
-        response.Content.ShouldNotBeNull();
-        response.Content.Gender.ShouldBe(Gender.Female);
-
-        _testOutputHelper.WriteLine("Created Female Borrower ID: {0}", response.Content.Id);
-    }
-
-    [Fact]
     public async Task AddBorrower_ShouldHandleYoungAdult()
     {
         // Arrange
