@@ -38,8 +38,8 @@ public class BorrowersEndpoints : IEndpoints
                 var borrowerSummaries = await handler.Handle(query);
                 return Results.Ok(borrowerSummaries);
             })
-        .WithSummary("Get Borrower Summaries")
-        .WithDescription("Retrieves summaries of borrowers based on provided criteria.");
+        .WithSummary("Get Borrowers")
+        .WithDescription("Retrieves borrowers based on provided criteria.");
         
         //get borrower by id
             app.MapGet("{id:guid}", async (Guid id, IQueryHandler<GetBorrowerByIdQuery, BorrowerDTO?> handler) =>

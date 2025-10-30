@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("Emata.Exercise.LoansManagement.Tests")]
 
-namespace Emata.Exercise.LoansManagement.Borrowers;
+namespace Emata.Exercise.LoansManagement.Loans;
 
 public class AssemblyInfo
 {

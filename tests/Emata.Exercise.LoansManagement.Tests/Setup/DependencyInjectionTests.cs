@@ -1,6 +1,7 @@
 ﻿using Emata.Exercise.LoansManagement.Tests.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shouldly;
 
 namespace Emata.Exercises.LoanManagement.IntegrationTests;
 
@@ -19,6 +20,6 @@ public class DependencyInjectionTests
         var host = _apiFactory.Services.GetRequiredService<IHost>();
 
         // Assert
-        Assert.NotNull(host);
+        host.ShouldNotBeNull();
     }
 }

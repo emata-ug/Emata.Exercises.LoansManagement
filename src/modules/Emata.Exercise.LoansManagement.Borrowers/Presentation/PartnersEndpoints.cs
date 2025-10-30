@@ -17,8 +17,8 @@ internal class PartnersEndpoints : IEndpoints
     {
         //health check endpoint
         app.MapGet($"health", () => Results.Ok("Partners API is healthy"))
-        .WithSummary("Get Health")
-        .WithDescription("Checks the health of the Partners API");
+            .WithSummary("Get Health")
+            .WithDescription("Checks the health of the Partners API");
 
         //add more endpoints as needed
         app.MapPost($"", async (
