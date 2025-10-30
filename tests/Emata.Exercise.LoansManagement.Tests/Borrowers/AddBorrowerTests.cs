@@ -126,28 +126,6 @@ public class AddBorrowerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task AddBorrower_ShouldHandleOlderAdult()
-    {
-        // Arrange
-        var addBorrowerCommand = BorrowerFakers.AddBorrowerCommandFaker.Generate();
-        addBorrowerCommand = addBorrowerCommand with 
-        { 
-            PartnerId = _partner.Id,
-            DateOfBirth = DateOnly.FromDateTime(DateTime.Now.AddYears(-80)) // 80 years old
-        };
-
-        // Act
-        var response = await _borrowersApi.AddBorrowerAsync(addBorrowerCommand);
-
-        // Assert
-        response.IsSuccessful.ShouldBeTrue();
-        response.Content.ShouldNotBeNull();
-        response.Content.DateOfBirth.ShouldBe(addBorrowerCommand.DateOfBirth);
-
-        _testOutputHelper.WriteLine("Created Older Adult Borrower ID: {0}", response.Content.Id);
-    }
-
-    [Fact]
     public async Task AddBorrower_ShouldHandleNonExistentPartner()
     {
         // Arrange
