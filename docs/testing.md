@@ -222,15 +222,6 @@ public async Task AddLoan_ShouldCreateLoanSuccessfully()
 }
 ```
 
-## Test Coverage
-
-### Test Statistics
-
-- **Total Tests**: 38
-- **Modules Covered**: 2 (Borrowers, Loans)
-- **Endpoints Tested**: 7
-- **Coverage Areas**: CRUD operations, filtering, edge cases, error scenarios
-
 ## Best Practices
 
 1. **Isolation**: Each test is isolated and doesn't depend on other tests
