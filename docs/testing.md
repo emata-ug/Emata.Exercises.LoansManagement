@@ -170,41 +170,35 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ### Test Organization
 
-Tests are organized following the module structure:
+Tests are organized by module following the module structure:
 
 ```
 tests/
 └── Emata.Exercise.LoansManagement.Tests/
     ├── Borrowers/
-    │   ├── AddBorrowerTests.cs
-    │   ├── GetBorrowerByIdTests.cs
-    │   ├── GetBorrowerSummariesTests.cs
-    │   ├── BorrowerFakers.cs
-    │   ├── IBorrowersRefitApi.cs
-    │   ├── BorrowersCollectionFixture.cs
-    │   └── Partners/
-    │       ├── AddPartnerTests.cs
-    │       └── GetPartnerTests.cs
+    │   ├── [Test classes per endpoint]
+    │   ├── BorrowerFakers.cs (Test data generators)
+    │   ├── IBorrowersRefitApi.cs (Refit API interface)
+    │   ├── BorrowersCollectionFixture.cs (xUnit collection fixture)
+    │   └── Partners/ (Sub-module for Partners endpoints)
     ├── Loans/
-    │   ├── AddLoanTests.cs
-    │   ├── GetLoansTests.cs
-    │   ├── GetLoanByIdTests.cs
-    │   ├── LoanFakers.cs
-    │   ├── ILoansRefitApi.cs
-    │   └── LoansCollectionFixture.cs
+    │   ├── [Test classes per endpoint]
+    │   ├── LoanFakers.cs (Test data generators)
+    │   ├── ILoansRefitApi.cs (Refit API interface)
+    │   └── LoansCollectionFixture.cs (xUnit collection fixture)
     └── Setup/
-        ├── ApiFactory.cs
-        └── DefaultCollectionFixture.cs
+        └── ApiFactory.cs (Shared test infrastructure)
 ```
 
 ### Test Naming Convention
 
-Tests follow the pattern: `MethodName_Should_ExpectedBehavior`
+Tests follow the pattern: `MethodName_Should_ExpectedBehavior_When_Condition` (when applicable)
 
 Examples:
 - `AddBorrower_ShouldCreateBorrowerSuccessfully`
-- `GetLoanById_ShouldReturnNotFoundForNonExistentLoan`
+- `GetLoanById_ShouldReturnNotFound_WhenLoanDoesNotExist`
 - `GetLoans_ShouldFilterByBorrowerId`
+- `GetBorrowerById_ShouldReturnNotFound_WhenIdIsEmpty`
 
 ### Test Pattern (AAA)
 
@@ -230,89 +224,12 @@ public async Task AddLoan_ShouldCreateLoanSuccessfully()
 
 ## Test Coverage
 
-### Borrowers Module
-
-#### Partners Endpoints
-- ✅ Create partner successfully
-- ✅ Handle invalid partner creation
-- ✅ Retrieve all partners
-
-#### Borrowers Endpoints  
-- ✅ Create borrower successfully
-- ✅ Create borrower with different genders (Male/Female)
-- ✅ Create borrower with minimum age (young adult)
-- ✅ Create borrower with maximum age (older adult)
-- ✅ Handle borrower with null optional fields
-- ✅ Handle borrower with non-existent partner
-- ✅ Get borrower by ID successfully
-- ✅ Get borrower by ID - not found for non-existent borrower
-- ✅ Get borrower by ID - not found for empty GUID
-- ✅ Get borrower summaries - all borrowers
-- ✅ Get borrower summaries - filter by partner ID
-- ✅ Get borrower summaries - filter by borrower IDs
-- ✅ Get borrower summaries - empty list for non-existent filters
-- ✅ Get borrower summaries - multiple filters
-
-### Loans Module
-
-#### Loans Endpoints
-- ✅ Create loan successfully
-- ✅ Create loan with minimum amount
-- ✅ Create loan with large amount
-- ✅ Create loan with future issue date
-- ✅ Create loan with null optional fields
-- ✅ Handle loan for non-existent borrower
-- ✅ Get all loans
-- ✅ Get loans filtered by borrower ID
-- ✅ Get loans filtered by minimum loan amount
-- ✅ Get loans filtered by maximum loan amount
-- ✅ Get loans filtered by date range
-- ✅ Get loans with empty list for non-matching filters
-- ✅ Get loans with multiple filters
-- ✅ Get loan by ID successfully
-- ✅ Get loan by ID - not found for non-existent loan
-- ✅ Get loan by ID - not found for empty GUID
-
 ### Test Statistics
 
 - **Total Tests**: 38
-- **Passing**: 34 (89.5%)
 - **Modules Covered**: 2 (Borrowers, Loans)
 - **Endpoints Tested**: 7
-
-## Known Issues
-
-Some edge case tests are currently failing due to query parameter serialization issues with array types in .NET's model binding. These represent ~10% of tests and are related to:
-- Complex query filtering with null/empty arrays
-- Array parameter binding with [AsParameters] attribute
-
-These issues don't affect core functionality and are areas for future improvement.
-
-## Continuous Integration
-
-### GitHub Actions (Recommended)
-
-```yaml
-name: Run Tests
-
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
-```
+- **Coverage Areas**: CRUD operations, filtering, edge cases, error scenarios
 
 ## Best Practices
 

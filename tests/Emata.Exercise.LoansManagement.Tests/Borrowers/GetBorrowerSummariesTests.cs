@@ -79,6 +79,11 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
         await response.EnsureSuccessfulAsync();
         response.Content.ShouldNotBeNull();
         response.Content.Count.ShouldBe(_borrowers.Count);
+        
+        // Compare that returned borrowers match expected borrowers
+        var expectedIds = _borrowers.Select(b => b.Id).OrderBy(id => id).ToList();
+        var actualIds = response.Content.Select(b => b.Id).OrderBy(id => id).ToList();
+        actualIds.ShouldBe(expectedIds);
 
         _testOutputHelper.WriteLine("Retrieved {0} borrowers for partner {1}", response.Content.Count, _partner.Id);
     }
@@ -97,6 +102,11 @@ public class GetBorrowerSummariesTests : IAsyncLifetime
         response.Content.ShouldNotBeNull();
         response.Content.Count.ShouldBe(borrowerIds.Length);
         response.Content.ShouldAllBe(b => borrowerIds.Contains(b.Id));
+        
+        // Compare that returned borrowers match the requested borrower IDs
+        var expectedIds = borrowerIds.OrderBy(id => id).ToList();
+        var actualIds = response.Content.Select(b => b.Id).OrderBy(id => id).ToList();
+        actualIds.ShouldBe(expectedIds);
 
         _testOutputHelper.WriteLine("Retrieved {0} borrowers by IDs", response.Content.Count);
     }

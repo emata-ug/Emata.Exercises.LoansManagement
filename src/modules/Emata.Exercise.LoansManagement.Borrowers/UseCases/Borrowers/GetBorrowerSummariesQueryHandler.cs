@@ -16,9 +16,19 @@ internal class GetBorrowerSummariesQueryHandler : IQueryHandler<GetBorrowerSumma
     
     public async Task<List<BorrowerSummaryDTO>> Handle(GetBorrowerSummariesQuery query, CancellationToken cancellationToken)
     {
-        var borrowers = await _dbContext.Borrowers
-            .Where(b => query.BorrowerIds == null || query.BorrowerIds.Contains(b.Id))
-            .Where(b => query.PartnerIds == null || query.PartnerIds.Contains(b.PartnerId))
+        var borrowersQuery = _dbContext.Borrowers.AsQueryable();
+
+        if (query.BorrowerIds != null && query.BorrowerIds.Length > 0)
+        {
+            borrowersQuery = borrowersQuery.Where(b => query.BorrowerIds.Contains(b.Id));
+        }
+
+        if (query.PartnerIds != null && query.PartnerIds.Length > 0)
+        {
+            borrowersQuery = borrowersQuery.Where(b => query.PartnerIds.Contains(b.PartnerId));
+        }
+
+        var borrowers = await borrowersQuery
             .Select(b => b.ToSummaryDTO())
             .ToListAsync(cancellationToken);
 

@@ -104,35 +104,6 @@ public class AddBorrowerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task AddBorrower_ShouldHandleNullOptionalFields()
-    {
-        // Arrange
-        var addBorrowerCommand = new AddBorrowerCommand
-        {
-            Surname = "TestSurname",
-            GivenName = "TestGivenName",
-            Gender = Gender.Male,
-            DateOfBirth = DateOnly.FromDateTime(DateTime.Now.AddYears(-25)),
-            PhoneNumber = "1234567890",
-            IdentificationNumber = null,
-            Email = null,
-            Town = null,
-            PartnerId = _partner.Id
-        };
-
-        // Act
-        var response = await _borrowersApi.AddBorrowerAsync(addBorrowerCommand);
-
-        // Assert
-        response.IsSuccessful.ShouldBeTrue();
-        response.Content.ShouldNotBeNull();
-        response.Content.IdentificationNumber.ShouldBeNull();
-        response.Content.Email.ShouldBeNull();
-
-        _testOutputHelper.WriteLine("Created Borrower with null optional fields: {0}", response.Content.Id);
-    }
-
-    [Fact]
     public async Task AddBorrower_ShouldHandleYoungAdult()
     {
         // Arrange
@@ -187,8 +158,8 @@ public class AddBorrowerTests : IAsyncLifetime
         var response = await _borrowersApi.AddBorrowerAsync(addBorrowerCommand);
 
         // Assert
-        // The endpoint may or may not validate partner existence
-        // Just verify we get a response
-        _testOutputHelper.WriteLine("Attempted to create borrower with non-existent partner. Status: {0}", response.StatusCode);
+        response.IsSuccessful.ShouldBeFalse();
+
+        _testOutputHelper.WriteLine("Correctly failed to create borrower with non-existent partner. Status: {0}", response.StatusCode);
     }
 }

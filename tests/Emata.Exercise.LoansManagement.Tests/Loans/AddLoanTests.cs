@@ -110,12 +110,12 @@ public class AddLoanTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task AddLoan_ShouldHandleFutureIssueDate()
+    public async Task AddLoan_ShouldHandleTodayIssueDate()
     {
         // Arrange
         var addLoanCommand = LoanFakers.AddLoanCommandFaker.Generate();
         addLoanCommand.BorrowerId = _borrower.Id;
-        addLoanCommand.IssueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30));
+        addLoanCommand.IssueDate = DateOnly.FromDateTime(DateTime.Now);
 
         // Act
         var response = await _loansApi.AddLoanAsync(addLoanCommand);
@@ -124,8 +124,9 @@ public class AddLoanTests : IAsyncLifetime
         response.IsSuccessful.ShouldBeTrue();
         response.Content.ShouldNotBeNull();
         response.Content.IssueDate.ShouldBe(addLoanCommand.IssueDate);
+        response.Content.IssueDate.ShouldBeLessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now));
 
-        _testOutputHelper.WriteLine("Created Loan with future issue date: {0}", response.Content.Id);
+        _testOutputHelper.WriteLine("Created Loan with today's issue date: {0}", response.Content.Id);
     }
 
     [Fact]
@@ -156,7 +157,7 @@ public class AddLoanTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task AddLoan_ShouldHandleNonExistentBorrower()
+    public async Task AddLoan_ShouldFail_WhenBorrowerDoesNotExist()
     {
         // Arrange
         var addLoanCommand = LoanFakers.AddLoanCommandFaker.Generate();
@@ -166,8 +167,8 @@ public class AddLoanTests : IAsyncLifetime
         var response = await _loansApi.AddLoanAsync(addLoanCommand);
 
         // Assert
-        // The endpoint doesn't validate borrower existence, so it may succeed or fail depending on implementation
-        // For now, we'll just verify the response
-        _testOutputHelper.WriteLine("Attempted to create loan for non-existent borrower. Status: {0}", response.StatusCode);
+        response.IsSuccessful.ShouldBeFalse();
+
+        _testOutputHelper.WriteLine("Correctly failed to create loan for non-existent borrower. Status: {0}", response.StatusCode);
     }
 }

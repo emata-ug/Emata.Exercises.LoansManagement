@@ -17,7 +17,8 @@ public class GetLoansTests : IAsyncLifetime
     private readonly ITestOutputHelper _testOutputHelper;
     private readonly Func<Task> _resetDatabaseAsync;
     private List<LoanItem> _loans = [];
-    private BorrowerDTO _borrower = default!;
+    private List<PartnerDTO> _partners = [];
+    private List<BorrowerDTO> _borrowers = [];
 
     public GetLoansTests(ApiFactory apiFactory, ITestOutputHelper testOutputHelper)
     {
@@ -34,24 +35,34 @@ public class GetLoansTests : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        // Create a partner first
-        var partner = BorrowerFakers.AddPartnerCommandFaker.Generate();
-        var partnerResponse = await _borrowersApi.AddPartnerAsync(partner);
-        await partnerResponse.EnsureSuccessfulAsync();
+        var random = new Random();
+        
+        // Create multiple partners
+        var partnerRequests = BorrowerFakers.AddPartnerCommandFaker.Generate(random.Next(3, 5));
+        foreach (var partnerRequest in partnerRequests)
+        {
+            var partnerResponse = await _borrowersApi.AddPartnerAsync(partnerRequest);
+            await partnerResponse.EnsureSuccessfulAsync();
+            _partners.Add(partnerResponse.Content!);
+        }
 
-        // Create a borrower
-        var addBorrowerCommand = BorrowerFakers.AddBorrowerCommandFaker.Generate();
-        addBorrowerCommand = addBorrowerCommand with { PartnerId = partnerResponse.Content!.Id };
+        // Create multiple borrowers, randomly assigning partners
+        var borrowerRequests = BorrowerFakers.AddBorrowerCommandFaker.Generate(random.Next(5, 8));
+        foreach (var borrowerRequest in borrowerRequests)
+        {
+            var randomPartner = _partners[random.Next(_partners.Count)];
+            var request = borrowerRequest with { PartnerId = randomPartner.Id };
+            var borrowerResponse = await _borrowersApi.AddBorrowerAsync(request);
+            await borrowerResponse.EnsureSuccessfulAsync();
+            _borrowers.Add(borrowerResponse.Content!);
+        }
 
-        var borrowerResponse = await _borrowersApi.AddBorrowerAsync(addBorrowerCommand);
-        await borrowerResponse.EnsureSuccessfulAsync();
-        _borrower = borrowerResponse.Content!;
-
-        // Create multiple loans
-        var loanRequests = LoanFakers.AddLoanCommandFaker.Generate(new Random().Next(5, 10));
+        // Create multiple loans, randomly assigning borrowers
+        var loanRequests = LoanFakers.AddLoanCommandFaker.Generate(random.Next(5, 10));
         foreach (var loanRequest in loanRequests)
         {
-            loanRequest.BorrowerId = _borrower.Id;
+            var randomBorrower = _borrowers[random.Next(_borrowers.Count)];
+            loanRequest.BorrowerId = randomBorrower.Id;
             var response = await _loansApi.AddLoanAsync(loanRequest);
             await response.EnsureSuccessfulAsync();
             _loans.Add(response.Content!);
@@ -75,20 +86,24 @@ public class GetLoansTests : IAsyncLifetime
     [Fact]
     public async Task GetLoans_ShouldFilterByBorrowerId()
     {
+        // Arrange
+        var testBorrower = _borrowers.First();
+        var expectedLoansCount = _loans.Count(l => l.BorrowerId == testBorrower.Id);
+        
         // Act
         var query = new GetLoansQuery
         {
-            BorrowerIds = [_borrower.Id]
+            BorrowerIds = [testBorrower.Id]
         };
         var response = await _loansApi.GetLoansAsync(query);
 
         // Assert
         await response.EnsureSuccessfulAsync();
         response.Content.ShouldNotBeNull();
-        response.Content.ShouldAllBe(loan => loan.BorrowerId == _borrower.Id);
-        response.Content.Count.ShouldBe(_loans.Count);
+        response.Content.ShouldAllBe(loan => loan.BorrowerId == testBorrower.Id);
+        response.Content.Count.ShouldBe(expectedLoansCount);
 
-        _testOutputHelper.WriteLine("Retrieved {0} loans for borrower {1}", response.Content.Count, _borrower.Id);
+        _testOutputHelper.WriteLine("Retrieved {0} loans for borrower {1}", response.Content.Count, testBorrower.Id);
     }
 
     [Fact]
@@ -178,13 +193,14 @@ public class GetLoansTests : IAsyncLifetime
     public async Task GetLoans_ShouldHandleMultipleFilters()
     {
         // Arrange
+        var testBorrower = _borrowers.First();
         var minAmount = _loans.Min(l => l.LoanAmount);
         var maxAmount = _loans.Max(l => l.LoanAmount);
 
         // Act
         var query = new GetLoansQuery
         {
-            BorrowerIds = [_borrower.Id],
+            BorrowerIds = [testBorrower.Id],
             MinLoanAmount = minAmount,
             MaxLoanAmount = maxAmount
         };
@@ -194,7 +210,7 @@ public class GetLoansTests : IAsyncLifetime
         await response.EnsureSuccessfulAsync();
         response.Content.ShouldNotBeNull();
         response.Content.ShouldAllBe(loan => 
-            loan.BorrowerId == _borrower.Id && 
+            loan.BorrowerId == testBorrower.Id && 
             loan.LoanAmount >= minAmount && 
             loan.LoanAmount <= maxAmount);
 

@@ -61,7 +61,7 @@ public class GetBorrowerByIdTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task GetBorrowerById_ShouldReturnNotFoundForNonExistentBorrower()
+    public async Task GetBorrowerById_ShouldReturnNotFound_WhenBorrowerDoesNotExist()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
@@ -77,7 +77,7 @@ public class GetBorrowerByIdTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task GetBorrowerById_ShouldReturnNotFoundForEmptyGuid()
+    public async Task GetBorrowerById_ShouldReturnNotFound_WhenIdIsEmpty()
     {
         // Act
         var response = await _borrowersApi.GetBorrowerByIdAsync(Guid.Empty);
