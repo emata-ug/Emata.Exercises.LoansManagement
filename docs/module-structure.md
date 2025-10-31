@@ -74,19 +74,32 @@ dotnet ef database update \
 graph TB
     API[API Project] --> BM[Borrowers Module]
     API --> LM[Loans Module]
-    API --> SM[Shared Module]
     
-    BM --> BD[Borrowers Domain]
-    BM --> BI[Borrowers Infrastructure]
-    BM --> BP[Borrowers Presentation]
+    subgraph "Borrowers Module"
+        BD[Domain]
+        BI[Infrastructure/Data]
+        BP[Presentation]
+        BD --> BI
+        BI --> BP
+        BI --> BDB[(Borrowers DB)]
+    end
     
-    LM --> LD[Loans Domain]
-    LM --> LI[Loans Infrastructure]
-    LM --> LP[Loans Presentation]
+    subgraph "Loans Module"
+        LD[Domain]
+        LI[Infrastructure/Data]
+        LP[Presentation]
+        LD --> LI
+        LI --> LP
+        LI --> LDB[(Loans DB)]
+    end
     
-    SM --> SI[Shared Infrastructure]
-    SM --> SE[Shared Endpoints]
+    subgraph "Shared Module"
+        SI[Infrastructure]
+        SE[Endpoints Interface]
+    end
     
-    BI --> BDB[(Borrowers DB)]
-    LI --> LDB[(Loans DB)]
+    BM --> SM[Shared Module]
+    LM --> SM
 ```
+
+The diagram shows that both the Borrowers Module and Loans Module depend on and use the Shared Module for common infrastructure and utilities.
