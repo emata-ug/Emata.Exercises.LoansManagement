@@ -13,6 +13,11 @@ The modular monolith is an architectural pattern that combines the simplicity of
 - **Simpler Development**: Developers can work on the entire application without managing multiple services, databases, and deployment pipelines
 - **Data Consistency**: Easier to maintain data consistency and handle transactions across modules within a single database
 
+**Further Reading:**
+- [What is a Modular Monolith - Milan Jovanović](https://www.milanjovanovic.tech/blog/what-is-a-modular-monolith)
+- [Modular Monolith Architecture - ABP Framework](https://abp.io/architecture/modular-monolith)
+- [Modular Monolith: A Primer - Kamil Grzybek](https://www.kamilgrzybek.com/blog/posts/modular-monolith-primer)
+
 ### Structure
 
 A modular monolith is structured with:
@@ -39,7 +44,7 @@ The application employs several communication patterns to facilitate interaction
 Since this is a modular monolith, all modules run within the same process. Communication between modules happens through:
 
 - **Direct Method Calls**: Modules can invoke services from other modules through dependency injection
-- **Shared Interfaces**: Common contracts defined in the Shared module ensure consistent communication patterns
+- **Shared Interfaces**: Common contracts and DTOs are defined in a dedicated Contracts folder, ensuring consistent communication patterns across modules
 - **Command/Query Pattern**: The application uses `ICommand`, `IQuery`, `ICommandHandler`, and `IQueryHandler` interfaces to handle operations
 
 ### Module Registration

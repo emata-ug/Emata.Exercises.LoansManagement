@@ -1,6 +1,15 @@
 # Emata.Exercises.LoansManagement
 
-A loan management system built with .NET 9, demonstrating modular monolith architecture, clean code principles, and modern API development practices.
+> ⚠️ **CAUTION - FICTITIOUS PROJECT** ⚠️
+>
+> This is a **fictional project** created exclusively for **interview purposes** and technical assessments.
+> It does **NOT** represent any real-world application, actual business requirements, or production systems.
+> The scenarios, business logic, and requirements presented here are purely hypothetical and should not be
+> considered as reflecting real banking, financial services, or loan management practices.
+
+## Project Overview
+
+A loan management system built with .NET 9, showcasing modular monolith architecture, clean code principles, and modern API development practices.
 
 ## Project Structure
 
@@ -125,7 +134,7 @@ We welcome contributions to this project! To ensure consistency and quality, ple
 ### Development Conventions
 
 - **Follow Existing Patterns**: Adhere to the architectural patterns and coding conventions already established in the project
-- **Modular Structure**: Organize code within the appropriate module (Borrowers, Loans, or Shared)
+- **Modular Structure**: Organize code within the appropriate module (Borrowers, Loans, or Shared). If your feature doesn't fit into any existing module, consider creating a new module following the same structure
 - **Naming Conventions**: Follow C# naming conventions and maintain consistency with existing code
 - **Code Organization**: Keep domain logic in Domain folders, data access in Infrastructure, and HTTP endpoints in Presentation
 
@@ -142,14 +151,3 @@ We welcome contributions to this project! To ensure consistency and quality, ple
 2. Build the solution without errors using `dotnet build`
 3. Verify your changes work as expected by running the API locally
 4. Update documentation if you've added new features or changed existing behavior
-
-## Development Notes
-
-This project demonstrates:
-
-- Modular monolith architecture
-- RESTful API design with Minimal APIs
-- Domain-Driven Design principles
-- Entity Framework Core with PostgreSQL
-- Comprehensive integration testing
-- OpenAPI documentation with Scalar
